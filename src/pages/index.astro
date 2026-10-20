@@ -1,0 +1,46 @@
+---
+// Geçici açılış sayfası: yalnızca logo.
+// Tam site taslağı src/pages/_tam-site.astro dosyasında (alt çizgiyle başladığı için yayınlanmıyor).
+// Tam siteye geçmek için: bu dosyayı silin, _tam-site.astro'nun adını index.astro yapın.
+import Logo from "../components/Logo.astro";
+import { site } from "../data/site";
+---
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{site.name}</title>
+    <meta name="description" content={site.description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0f1a2b" />
+    <meta property="og:title" content={site.name} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <main>
+      <h1><Logo class="logo" title="Kısalar Yapım" /></h1>
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  :root { --logo-mavi: url(#kisalar-metal); --logo-pembe: url(#kisalar-metal); }
+  html, body { margin: 0; height: 100%; background: #0f1a2b; color-scheme: dark; }
+  /* Logo yatayda ortada, dikeyde biraz yukarıda */
+  main { min-height: 100%; display: grid; place-items: center; padding: 2rem 2rem calc(2rem + 16vh); box-sizing: border-box; }
+  h1 { margin: 0; }
+  .logo { display: block; width: min(44vw, 13rem); height: auto; transform-origin: 50% 50%; }
+
+  /* Fareyle üzerine gelince hafif nefes alma */
+  @keyframes nefes {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.04); filter: brightness(1.12); }
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .logo:hover { animation: nefes 3.2s ease-in-out infinite; }
+  }
+</style>

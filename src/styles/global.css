@@ -1,0 +1,96 @@
+@import "@fontsource-variable/archivo/wdth.css";
+
+:root {
+  /* Logodan alınan marka renkleri */
+  --mavi: #354dff;
+  --pembe: #f41ba3;
+  --lacivert: #15175c;   /* metin rengi: mavinin koyusu */
+  --beyaz: #ffffff;
+  --sis: #f4f5ff;        /* mavi tonlu açık zemin */
+  --toz: #5b5d7e;
+
+  --zemin: var(--beyaz);
+  --zemin-2: var(--sis);
+  --metin: var(--lacivert);
+  --metin-2: var(--toz);
+  --baslik: var(--mavi);
+  --cizgi: rgba(21, 23, 92, 0.14);
+  --logo-mavi: var(--mavi);
+  --logo-pembe: var(--pembe);
+
+  --yazi: "Archivo Variable", "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --olcek-0: 1.0625rem;
+  --olcek-1: 1.375rem;
+  --olcek-2: clamp(2rem, 1.2rem + 3vw, 3.25rem);
+  --olcek-3: clamp(3rem, 1.5rem + 7vw, 7rem);
+
+  --kenar: clamp(1.25rem, 4vw, 3rem);
+  --genislik: 76rem;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --zemin: #0d0e33;
+    --zemin-2: #14164a;
+    --metin: #eceeff;
+    --metin-2: #a6a9cc;
+    --baslik: #93a0ff;
+    --cizgi: rgba(236, 238, 255, 0.16);
+    --logo-mavi: #93a0ff;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 5.5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--zemin);
+  color: var(--metin);
+  font-family: var(--yazi);
+  font-size: var(--olcek-0);
+  line-height: 1.55;
+  font-variation-settings: "wdth" 100;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  font-weight: 800;
+  font-variation-settings: "wdth" 72;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+h2 { font-size: var(--olcek-2); color: var(--baslik); }
+h3 { font-size: var(--olcek-1); line-height: 1.15; font-variation-settings: "wdth" 85; }
+p { margin: 0 0 1em; max-width: 64ch; text-wrap: pretty; }
+p:last-child { margin-bottom: 0; }
+
+a { color: inherit; text-underline-offset: 0.18em; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 3px solid var(--pembe);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+.kapsayici {
+  width: 100%;
+  max-width: var(--genislik);
+  margin-inline: auto;
+  padding-inline: var(--kenar);
+}
+
+.gizli {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}

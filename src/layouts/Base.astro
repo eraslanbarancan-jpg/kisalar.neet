@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+import { site } from "../data/site";
+import Logo from "../components/Logo.astro";
+
+interface Props { title?: string; description?: string }
+const { title = site.name, description = site.description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: site.name,
+      legalName: site.legalName,
+      email: site.email,
+      address: { "@type": "PostalAddress", addressLocality: "Beşiktaş", addressRegion: "İstanbul", addressCountry: "TR" },
+      sameAs: [site.instagram, site.festivalUrl],
+    })} />
+  </head>
+  <body>
+    <a class="atla" href="#icerik">İçeriğe geç</a>
+    <header class="ust">
+      <div class="kapsayici ust-ic">
+        <a class="logo" href="/" aria-label="Kısalar Yapım, ana sayfa"><Logo class="logo-isaret" title="Kısalar" /><span>Yapım</span></a>
+        <nav aria-label="Ana menü">
+          <ul>
+            <li><a href="/#hakkimizda">Hakkımızda</a></li>
+            <li><a href="/#projeler">Projeler</a></li>
+            <li><a href="/#iletisim">İletişim</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main id="icerik">
+      <slot />
+    </main>
+    <footer class="alt">
+      <div class="kapsayici alt-ic">
+        <p>{site.legalName}</p>
+        <p>© {new Date().getFullYear()}</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .atla {
+    position: absolute; left: 1rem; top: -3rem; z-index: 20;
+    background: var(--pembe); color: #fff; padding: 0.5rem 0.75rem; font-weight: 700;
+  }
+  .atla:focus { top: 1rem; }
+
+  .ust {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--zemin); color: var(--metin);
+    border-bottom: 1px solid var(--cizgi);
+  }
+  .ust-ic {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    min-height: 4.75rem;
+  }
+  .logo {
+    display: flex; align-items: flex-end; gap: 0.6rem;
+    text-decoration: none; color: var(--baslik);
+    font-weight: 700; font-size: 1.0625rem; line-height: 1;
+  }
+  .logo :global(.logo-isaret) { height: 3.25rem; width: auto; }
+  .logo span { padding-bottom: 0.1rem; }
+  nav ul { display: flex; gap: clamp(0.75rem, 3vw, 2rem); list-style: none; margin: 0; padding: 0; }
+  nav a { text-decoration: none; font-size: 0.9375rem; }
+  nav a:hover { text-decoration: underline; }
+
+  .alt { border-top: 1px solid var(--cizgi); color: var(--metin-2); font-size: 0.875rem; }
+  .alt-ic { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem; padding-block: 1.5rem; }
+</style>

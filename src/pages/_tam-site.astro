@@ -1,0 +1,252 @@
+---
+import Base from "../layouts/Base.astro";
+import {
+  site, hero, about, manifesto, history, services, projects, future, team, partners,
+} from "../data/site";
+---
+<Base title="Kısalar Yapım | Kısa formun yapım evi">
+  <section class="giris" aria-labelledby="giris-baslik">
+    <div class="kapsayici">
+      <h1 id="giris-baslik">{hero.title}</h1>
+      <p class="giris-metin">{hero.text}</p>
+
+      <div class="sayac" aria-hidden="true">
+        <span class="sayac-sayi"><span data-dk>20</span><span class="iki-nokta">:</span><span data-sn>00</span></span>
+        <span class="sayac-not">Bir Kısalar performansı en fazla bu kadar sürer. Süre şimdi başladı.</span>
+      </div>
+      <p class="gizli">Kısalar Festivali’nde her performans en fazla 20 dakika sürer.</p>
+    </div>
+  </section>
+
+  <section id="hakkimizda" class="bolum" aria-labelledby="hakkimizda-baslik">
+    <div class="kapsayici iki-sutun">
+      <h2 id="hakkimizda-baslik">Hakkımızda</h2>
+      <div>{about.map((p) => <p>{p}</p>)}</div>
+    </div>
+  </section>
+
+  <section class="bolum koyu" aria-labelledby="manifesto-baslik">
+    <div class="kapsayici iki-sutun">
+      <h2 id="manifesto-baslik">Manifesto</h2>
+      <div class="manifesto">
+        {manifesto.map((p, i) => <p class={i === manifesto.length - 1 ? "son" : ""}>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="bolum" aria-labelledby="tarihce-baslik">
+    <div class="kapsayici">
+      <h2 id="tarihce-baslik">Tarihçe</h2>
+      <ol class="zaman">
+        {history.map((h) => (
+          <li class={h.stats.length === 0 ? "gelecek" : ""}>
+            <span class="yil">{h.year}</span>
+            <h3>{h.title}</h3>
+            <p>{h.text}</p>
+            {h.stats.length > 0 && (
+              <dl class="rakamlar">
+                {h.stats.map((s) => (
+                  <div><dt>{s.label}</dt><dd>{s.value}</dd></div>
+                ))}
+              </dl>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="bolum" aria-labelledby="faaliyet-baslik">
+    <div class="kapsayici iki-sutun">
+      <h2 id="faaliyet-baslik">Ne yapıyoruz</h2>
+      <ul class="alanlar">
+        {services.map((s) => (
+          <li><h3>{s.title}</h3><p>{s.text}</p></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="projeler" class="bolum" aria-labelledby="projeler-baslik">
+    <div class="kapsayici">
+      <h2 id="projeler-baslik">Öne çıkan projeler</h2>
+      <ul class="projeler">
+        {projects.map((p) => (
+          <li>
+            <span class="proje-yil">{p.year}</span>
+            <div>
+              <h3>{p.title}</h3>
+              <p class="yer">{p.place}</p>
+            </div>
+            <p>{p.text}</p>
+            {p.href && <a href={p.href} rel="noopener">Ayrıntılar<span class="gizli">: {p.title}</span></a>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bolum" aria-labelledby="gelecek-baslik">
+    <div class="kapsayici iki-sutun">
+      <h2 id="gelecek-baslik">Gelecek planlarımız</h2>
+      <p class="buyuk">{future}</p>
+    </div>
+  </section>
+
+  <section class="bolum" aria-label="Ekip ve iş birlikleri">
+    <div class="kapsayici iki-esit">
+      {team.length > 0 && (
+        <div>
+          <h2>Ekip</h2>
+          <ul class="liste">
+            {team.map((t) => <li><strong>{t.name}</strong><span>{t.role}</span></li>)}
+          </ul>
+        </div>
+      )}
+      {partners.length > 0 && (
+        <div>
+          <h2>İş birlikleri</h2>
+          <ul class="liste">
+            {partners.map((p) => <li><strong>{p}</strong></li>)}
+          </ul>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <section id="iletisim" class="bolum koyu" aria-labelledby="iletisim-baslik">
+    <div class="kapsayici">
+      <h2 id="iletisim-baslik">Birlikte bir şey üretelim</h2>
+      <a class="eposta" href={`mailto:${site.email}`}>{site.email}</a>
+      <dl class="iletisim">
+        <div><dt>Adres</dt><dd>{site.address}</dd></div>
+        {site.phone && <div><dt>Telefon</dt><dd><a href={`tel:${site.phone.replace(/\s/g, "")}`}>{site.phone}</a></dd></div>}
+        <div><dt>Instagram</dt><dd><a href={site.instagram} rel="noopener">@kisalarfestivali</a></dd></div>
+        <div><dt>Festival</dt><dd><a href={site.festivalUrl} rel="noopener">kisalarfestivali.org</a></dd></div>
+      </dl>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // 20 dakikalık geri sayım: sayfadaki tek hareketli öğe.
+  const dkEl = document.querySelector<HTMLElement>("[data-dk]");
+  const snEl = document.querySelector<HTMLElement>("[data-sn]");
+  const el = dkEl?.parentElement;
+  const azHareket = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (el && dkEl && snEl && !azHareket) {
+    const toplam = 20 * 60;
+    const bas = Date.now();
+    const yaz = () => {
+      const kalan = Math.max(0, toplam - Math.floor((Date.now() - bas) / 1000));
+      const dk = String(Math.floor(kalan / 60)).padStart(2, "0");
+      const sn = String(kalan % 60).padStart(2, "0");
+      dkEl.textContent = dk;
+      snEl.textContent = sn;
+      if (kalan === 0) { el.classList.add("bitti"); clearInterval(z); }
+    };
+    const z = setInterval(yaz, 1000);
+  }
+</script>
+
+<style>
+  .giris {
+    background: var(--zemin-2);
+    color: var(--metin);
+    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem);
+    overflow: hidden;
+  }
+  .giris h1 { font-size: var(--olcek-3); max-width: 12ch; color: var(--baslik); }
+  .giris-metin { margin-top: 1.5rem; font-size: var(--olcek-1); line-height: 1.4; max-width: 40ch; color: var(--metin-2); }
+
+  .sayac {
+    display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.5rem 2rem;
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    border-top: 1px solid var(--cizgi);
+    padding-top: 1rem;
+  }
+  .sayac-sayi {
+    font-size: clamp(6rem, 30vw, 21rem);
+    font-weight: 900;
+    font-variation-settings: "wdth" 62;
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--baslik);
+  }
+  .iki-nokta { color: var(--pembe); }
+  .sayac-sayi.bitti { color: var(--pembe); }
+  .sayac-not { max-width: 22ch; padding-bottom: 0.75rem; color: var(--metin-2); font-size: 0.9375rem; }
+
+  .bolum { padding-block: clamp(3.5rem, 8vw, 6.5rem); border-top: 1px solid var(--cizgi); }
+  .koyu { background: var(--mavi); color: #fff; border-top: 0; }
+  .koyu h2 { color: #fff; }
+
+  .iki-sutun { display: grid; gap: 1.5rem 3rem; }
+  .iki-esit { display: grid; gap: 3rem; }
+  @media (min-width: 52rem) {
+    .iki-sutun { grid-template-columns: minmax(14rem, 1fr) 2fr; }
+    .iki-esit { grid-template-columns: 1fr 1fr; }
+  }
+
+  .manifesto p { font-size: var(--olcek-1); line-height: 1.4; font-variation-settings: "wdth" 90; }
+  .manifesto .son::before {
+    content: ""; display: block; width: 0.6em; height: 0.6em; border-radius: 50%;
+    background: var(--pembe); margin-bottom: 0.35em;
+  }
+  .manifesto .son {
+    margin-top: 2rem; font-size: var(--olcek-2); font-weight: 800; line-height: 1.02;
+    font-variation-settings: "wdth" 72; color: #fff;
+  }
+
+  .zaman { list-style: none; padding: 0; margin: 2.5rem 0 0; display: grid; gap: 2.5rem; }
+  @media (min-width: 52rem) { .zaman { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+  .zaman li { border-top: 3px solid var(--baslik); padding-top: 1rem; }
+  .zaman li.gelecek { border-top-style: dashed; border-top-color: var(--pembe); color: var(--metin-2); }
+  .zaman li.gelecek .yil { color: var(--pembe); }
+  .yil {
+    display: block; font-size: var(--olcek-2); font-weight: 800; line-height: 1;
+    font-variation-settings: "wdth" 62; margin-bottom: 0.75rem; color: var(--baslik);
+  }
+  .zaman h3 { margin-bottom: 0.5rem; }
+  .rakamlar { display: flex; gap: 1.5rem; margin: 1.25rem 0 0; }
+  .rakamlar div { display: flex; flex-direction: column-reverse; }
+  .rakamlar dt { color: var(--metin-2); font-size: 0.875rem; }
+  .rakamlar dd { margin: 0; font-size: 1.75rem; font-weight: 800; font-variation-settings: "wdth" 72; font-variant-numeric: tabular-nums; }
+
+  .alanlar { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  @media (min-width: 40rem) { .alanlar { grid-template-columns: 1fr 1fr; column-gap: 2rem; } }
+  .alanlar li { border-top: 1px solid var(--cizgi); padding-block: 1.25rem 1.75rem; }
+  .alanlar h3 { margin-bottom: 0.5rem; }
+  .alanlar p { color: var(--metin-2); }
+
+  .projeler { list-style: none; margin: 2.5rem 0 0; padding: 0; }
+  .projeler li {
+    display: grid; gap: 0.5rem 2rem; padding-block: 1.5rem;
+    border-top: 1px solid var(--cizgi);
+  }
+  .projeler li:last-child { border-bottom: 1px solid var(--cizgi); }
+  @media (min-width: 52rem) {
+    .projeler li { grid-template-columns: 5rem 1.2fr 2fr auto; align-items: baseline; }
+  }
+  .proje-yil { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--metin-2); }
+  .yer { color: var(--metin-2); font-size: 0.9375rem; margin-top: 0.25rem; }
+  .projeler a { font-weight: 600; white-space: nowrap; }
+
+  .buyuk { font-size: var(--olcek-1); line-height: 1.45; }
+
+  .liste { list-style: none; margin: 1.5rem 0 0; padding: 0; }
+  .liste li { display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--cizgi); padding-block: 0.875rem; }
+  .liste span { color: var(--metin-2); }
+
+  .eposta {
+    display: inline-block; margin-top: 1.5rem;
+    font-size: clamp(1.5rem, 1rem + 3vw, 3rem); font-weight: 700;
+    font-variation-settings: "wdth" 80;
+    overflow-wrap: anywhere; color: #fff;
+  }
+  .iletisim { display: grid; gap: 1.25rem 2rem; margin: 3rem 0 0; }
+  @media (min-width: 40rem) { .iletisim { grid-template-columns: repeat(4, auto); justify-content: start; } }
+  .iletisim dt { color: rgba(255,255,255,0.75); font-size: 0.875rem; }
+  .iletisim dd { margin: 0.25rem 0 0; }
+</style>
